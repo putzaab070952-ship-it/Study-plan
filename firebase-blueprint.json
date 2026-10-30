@@ -1,0 +1,150 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "User account information, study settings, and migration status",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string" },
+        "displayName": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "settings": { "type": "object" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" },
+        "dataMigrated": { "type": "boolean" }
+      },
+      "required": ["uid"]
+    },
+    "Subject": {
+      "title": "Subject",
+      "description": "A study subject or course",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "name": { "type": "string", "maxLength": 100 },
+        "code": { "type": "string", "maxLength": 50 },
+        "color": { "type": "string", "maxLength": 30 },
+        "icon": { "type": "string", "maxLength": 50 },
+        "goal": { "type": "string", "maxLength": 500 },
+        "examDate": { "type": "string", "maxLength": 30 },
+        "targetHoursPerWeek": { "type": "number" },
+        "resources": { "type": "array" },
+        "topics": { "type": "array" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "name", "color"]
+    },
+    "Task": {
+      "title": "Task",
+      "description": "A study task, assignment, or reading item",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "title": { "type": "string", "maxLength": 200 },
+        "description": { "type": "string", "maxLength": 2000 },
+        "subjectId": { "type": "string", "maxLength": 100 },
+        "topicId": { "type": "string", "maxLength": 100 },
+        "type": { "type": "string", "maxLength": 30 },
+        "dueDate": { "type": "string", "maxLength": 30 },
+        "plannedDate": { "type": "string", "maxLength": 30 },
+        "plannedStartTime": { "type": "string", "maxLength": 20 },
+        "plannedDurationMinutes": { "type": "number" },
+        "priority": { "type": "string", "maxLength": 20 },
+        "status": { "type": "string", "maxLength": 30 },
+        "subtasks": { "type": "array" },
+        "notes": { "type": "string", "maxLength": 2000 },
+        "resourceLinks": { "type": "array" },
+        "recurrence": { "type": "object" },
+        "completedAt": { "type": "string", "maxLength": 50 },
+        "createdAt": { "type": "string", "maxLength": 50 },
+        "postponedFrom": { "type": "string", "maxLength": 30 }
+      },
+      "required": ["id", "title", "subjectId", "type", "priority", "status"]
+    },
+    "StudySession": {
+      "title": "StudySession",
+      "description": "A logged focus or pomodoro study session",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "taskId": { "type": "string", "maxLength": 100 },
+        "subjectId": { "type": "string", "maxLength": 100 },
+        "topicId": { "type": "string", "maxLength": 100 },
+        "title": { "type": "string", "maxLength": 200 },
+        "date": { "type": "string", "maxLength": 30 },
+        "startTime": { "type": "string", "maxLength": 20 },
+        "durationMinutes": { "type": "number" },
+        "type": { "type": "string", "maxLength": 30 },
+        "notes": { "type": "string", "maxLength": 1000 },
+        "completedAt": { "type": "string", "maxLength": 50 }
+      },
+      "required": ["id", "subjectId", "durationMinutes", "completedAt"]
+    },
+    "ReviewItem": {
+      "title": "ReviewItem",
+      "description": "A spaced repetition review card and history",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "subjectId": { "type": "string", "maxLength": 100 },
+        "topicId": { "type": "string", "maxLength": 100 },
+        "title": { "type": "string", "maxLength": 200 },
+        "level": { "type": "number" },
+        "lastReviewedDate": { "type": "string", "maxLength": 30 },
+        "nextReviewDate": { "type": "string", "maxLength": 30 },
+        "history": { "type": "array" },
+        "createdAt": { "type": "string", "maxLength": 50 }
+      },
+      "required": ["id", "subjectId", "title", "level", "nextReviewDate"]
+    },
+    "Exam": {
+      "title": "Exam",
+      "description": "An exam target and countdown information",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "title": { "type": "string", "maxLength": 200 },
+        "subjectId": { "type": "string", "maxLength": 100 },
+        "examDate": { "type": "string", "maxLength": 30 },
+        "startTime": { "type": "string", "maxLength": 20 },
+        "location": { "type": "string", "maxLength": 200 },
+        "weightPercentage": { "type": "number" },
+        "targetScore": { "type": "string", "maxLength": 50 },
+        "notes": { "type": "string", "maxLength": 1000 }
+      },
+      "required": ["id", "title", "subjectId", "examDate"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "User profile, configuration preferences, and migration tracking"
+    },
+    "/users/{userId}/subjects/{subjectId}": {
+      "schema": "Subject",
+      "description": "Study subject/course created by user"
+    },
+    "/users/{userId}/tasks/{taskId}": {
+      "schema": "Task",
+      "description": "Study task or assignment created by user"
+    },
+    "/users/{userId}/studySessions/{sessionId}": {
+      "schema": "StudySession",
+      "description": "Study session logged by user"
+    },
+    "/users/{userId}/reviewItems/{reviewId}": {
+      "schema": "ReviewItem",
+      "description": "Spaced repetition item created by user"
+    },
+    "/users/{userId}/exams/{examId}": {
+      "schema": "Exam",
+      "description": "Exam schedule created by user"
+    }
+  }
+}

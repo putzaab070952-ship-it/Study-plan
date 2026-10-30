@@ -1,0 +1,77 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default Deny Catch-all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper functions
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 128;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    // Connectivity test document
+    match /test/{testId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // User profile and configurations
+    match /users/{userId} {
+      allow get: if isOwner(userId);
+      allow list: if false;
+      allow create, update: if isOwner(userId);
+      allow delete: if isOwner(userId);
+
+      // Subjects collection
+      match /subjects/{subjectId} {
+        allow get: if isOwner(userId) && isValidId(subjectId);
+        allow list: if isOwner(userId);
+        allow create, update: if isOwner(userId) && isValidId(subjectId);
+        allow delete: if isOwner(userId) && isValidId(subjectId);
+      }
+
+      // Tasks collection
+      match /tasks/{taskId} {
+        allow get: if isOwner(userId) && isValidId(taskId);
+        allow list: if isOwner(userId);
+        allow create, update: if isOwner(userId) && isValidId(taskId);
+        allow delete: if isOwner(userId) && isValidId(taskId);
+      }
+
+      // Study sessions collection
+      match /studySessions/{sessionId} {
+        allow get: if isOwner(userId) && isValidId(sessionId);
+        allow list: if isOwner(userId);
+        allow create, update: if isOwner(userId) && isValidId(sessionId);
+        allow delete: if isOwner(userId) && isValidId(sessionId);
+      }
+
+      // Spaced repetition review items collection
+      match /reviewItems/{reviewId} {
+        allow get: if isOwner(userId) && isValidId(reviewId);
+        allow list: if isOwner(userId);
+        allow create, update: if isOwner(userId) && isValidId(reviewId);
+        allow delete: if isOwner(userId) && isValidId(reviewId);
+      }
+
+      // Exams collection
+      match /exams/{examId} {
+        allow get: if isOwner(userId) && isValidId(examId);
+        allow list: if isOwner(userId);
+        allow create, update: if isOwner(userId) && isValidId(examId);
+        allow delete: if isOwner(userId) && isValidId(examId);
+      }
+    }
+  }
+}
+

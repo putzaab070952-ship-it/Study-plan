@@ -1,0 +1,6 @@
+{
+  "name": "StudyFlow - ปฏิทินและระบบวางแผนอ่านหนังสือครบวงจร",
+  "description": "ระบบวางแผนการเรียนครบวงจร รวม Calendar, Task Manager, Course Tracker, Focus Timer, Spaced Repetition และ Progress Analytics สำหรับนักเรียนนักศึกษา",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
